@@ -11,18 +11,20 @@ public class PrimaryKeyDemo {
 	public static void main(String[] args) {
 
 		// create session factory
-		SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Student.class)
-				.buildSessionFactory();
+//		SessionFactory factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Student.class)
+//				.buildSessionFactory();
 
 		// create session
-		Session session = factory.getCurrentSession();
+//		Session session = factory.getCurrentSession();
 
-		try {
+		try (SessionFactory factory = new Configuration().configure("hibernate.cfg.xml")
+				.addAnnotatedClass(Student.class).buildSessionFactory()) {
+    		Session session = factory.getCurrentSession();
 			// create 3 student objects
 			System.out.println("Creating 3 student objects...");
-			Student tempStudent1 = new Student("John", "Doe", "john@luv2code.com");
-			Student tempStudent2 = new Student("Mary", "Public", "mary@luv2code.com");
-			Student tempStudent3 = new Student("Bonita", "Applebum", "bonita@luv2code.com");
+			Student tempStudent1 = new Student("Ivan", "Ivanov", "ivan@luv2code.com",DateUtils.parseDate("01/12/1999"));
+			Student tempStudent2 = new Student("Petr", "Petrov", "petr@luv2code.com",DateUtils.parseDate("01/02/1999"));
+			Student tempStudent3 = new Student("Elena", "Pretty", "elena@luv2code.com",DateUtils.parseDate("01/01/2000"));
 
 			// start a transaction
 			session.beginTransaction();
@@ -37,10 +39,8 @@ public class PrimaryKeyDemo {
 			session.getTransaction().commit();
 
 			System.out.println("Done!");
-		} finally {
-			factory.close();
+		} catch (Exception exc) {
+			exc.printStackTrace();
 		}
-
 	}
-
 }
